@@ -1,21 +1,30 @@
 import { useState } from "react"
-import type { ChangeEvent } from "react"
-import type { FormEvent } from "react"
-import type { Activity } from "../types"
+import type { ChangeEvent, FormEvent, Dispatch } from "react"
+import { v4 as uuidv4 } from "uuid"
 import { categories } from "../data/categories"
+import type { Activity } from "../types"
+import type { ActivityActions } from "../reducers/activity-reducer"
 
-export default function Form() {
 
-    const [activity, setActivity] = useState<Activity>({
+type FormProps = {
+    dispatch: Dispatch<ActivityActions>
+}
+
+const initialState : Activity = {
+        id: uuidv4(), // Generate a unique ID for the activity
         category: 1, // Default category ID
         nameActivity: '',
         calories: 0
-    })
+}
+
+export default function Form({dispatch} : FormProps) {
+
+    const [activity, setActivity] = useState<Activity>(initialState)
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement> ) => {
         const isNumberField = ['category', 'calories'].includes(e.target.id);
 
-        console.log(isNumberField);
+        // console.log(isNumberField);
         
        setActivity({
             ...activity,
@@ -25,23 +34,29 @@ export default function Form() {
     }
 
     const isValidActivity = () => {
-        const { nameActivity, calories } = activity;
-        console.log(nameActivity.trim() !== '', calories > 0);
+        const { nameActivity, calories } = activity        
         
         return nameActivity.trim() !== '' && calories > 0;
     }
-    const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('Submitted activity:', activity);
+
+        dispatch({ type: 'save-activity', payload: { newActivity: activity } });
+
+        setActivity({
+            ...initialState, // Reset to initial state
+            id: uuidv4() // Generate a new unique ID for the next activity  
+        }); // Reset the form after submission
+        
     }
 
+    return (
+        <form
+        className="space-y-5 bg-white shadow p-10 rounded-lg"
+        onSubmit={handleSubmit}
+        >
 
-
-  return (
-    <form
-      className="space-y-5 bg-white shadow p-10 rounded-lg"
-      onSubmit={handleSubmit}
-    >
         <div className="grid grid-cols-1 gap-3">
             <label htmlFor="category" className="font-bold">Category:</label>
             <select
