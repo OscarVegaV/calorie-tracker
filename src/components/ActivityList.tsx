@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { Dispatch } from "react";
 import type { Activity } from "../types";
 import { categories } from "../data/categories";
-import { PencilSquareIcon} from '@heroicons/react/24/outline'
+import { PencilSquareIcon, XCircleIcon} from '@heroicons/react/24/outline'
 import type { ActivityActions } from "../reducers/activity-reducer";
 
 type ActivityListProps = {
@@ -16,6 +16,8 @@ export default function ActivityList({activities, dispatch}: ActivityListProps) 
     (category: Activity['category']) => categories.map(cat => cat.id === category ? cat.name : '')
   , [activities])
 
+  const isEmptyActivities = useMemo(() => activities.length === 0, [activities]);
+
 
   return (
     <>
@@ -23,32 +25,42 @@ export default function ActivityList({activities, dispatch}: ActivityListProps) 
             Food & Exercise Activities
         </h2>
 
-        {activities.map( activity => (
-          <div key={activity.id} className="px-5 py-10 bg-white mt-5 flex justify-between">
-            <div className="space-y-2 relative">
+        { isEmptyActivities ?
+            <p className="text-center text-2xl font-bold text-slate-500 mt-10">
+              No activities added yet
+            </p> :
 
-            <p className={`absolute -top-8 -left-8 px-10 py-2 text-white uppercase font-bold ${activity.category === 1 ? 'bg-lime-500' : 'bg-orange-500'}` }>
-                {categoryName(+activity.category)}
-              </p>
-              <p className="text-2xl font-bold pt-5">
-                {activity.nameActivity}
-              </p>
-              <p className="font-black text-4xl text-lime-500">
-                {activity.calories} {' '}
-                <span >Calories</span>
-              </p>
-            </div> {/* end div */}
+              activities.map( activity => (
+                <div key={activity.id} className="px-5 py-10 bg-white mt-5 flex justify-between">
+                  <div className="space-y-2 relative">
 
-            <div className="flex gap-5 items-center">
-              <button
-                onClick={() => dispatch({type: 'save-activeId', payload: {id: activity.id} })}
-              >
-                <PencilSquareIcon className="h-8 w-8 text-gray-800"
-                />
-              </button>
-            </div>
-          </div>
-          ))}
+                  <p className={`absolute -top-8 -left-8 px-10 py-2 text-white uppercase font-bold ${activity.category === 1 ? 'bg-lime-500' : 'bg-orange-500'}` }>
+                      {categoryName(+activity.category)}
+                    </p>
+                    <p className="text-2xl font-bold pt-5">
+                      {activity.nameActivity}
+                    </p>
+                    <p className="font-black text-4xl text-lime-500">
+                      {activity.calories} {' '}
+                      <span >Calories</span>
+                    </p>
+                  </div> {/* end div */}
+
+                  <div className="flex gap-5 items-center">
+                    <button
+                      onClick={() => dispatch({type: 'save-activeId', payload: {id: activity.id} })}
+                    >
+                      <PencilSquareIcon className="h-8 w-8 text-gray-800"/>
+                    </button>
+
+                    <button
+                      onClick={() => dispatch({type: 'delete-activeId', payload: {id: activity.id} })}
+                    >
+                      <XCircleIcon className="h-8 w-8 text-red-500"/>
+                    </button>
+                  </div>
+                </div>
+                ))}
     </>
   )
 }
