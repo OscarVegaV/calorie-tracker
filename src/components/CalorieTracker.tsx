@@ -43,26 +43,7 @@ export default function CalorieTracker({ activities }: CalorieTrackerProps) {
           />
         </div>
 
-        {/* ia */}
-        <div>
-          <p className="text-white font-bold rounded-full grid-cols-1 gap-3 text-center ">
-            <span className="text-6xl font-black text-lime-500">
-              {caloriesConsumed} 
-            </span>
-            <span className="text-2xl font-bold text-white">
-              Calories Consumed
-            </span>
-          </p>
-          <p className="text-white font-bold rounded-full grid-cols-1 gap-3 text-center mt-5">
-            <span className="text-6xl font-black text-lime-500">
-              {caloriesBurned} 
-            </span>
-            <span className="text-2xl font-bold text-white">
-              Calories Burned
-            </span>
-          </p>
-
-        </div>
+        
     </>
   )
 }
