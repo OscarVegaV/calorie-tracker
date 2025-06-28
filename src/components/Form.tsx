@@ -12,10 +12,11 @@ type FormProps = {
 }
 
 const initialState : Activity = {
-        id: uuidv4(), // Generate a unique ID for the activity
-        category: 1, // Default category ID
-        nameActivity: '',
-        calories: 0
+    id: uuidv4(), // Generate a unique ID for the activity
+    category: 1, // Default category ID
+    nameActivity: '',
+    calories: 0
+    // calories: '' as unknown as number // Start as empty string for input, cast to number for Activity type
 }
 
 export default function Form({dispatch, state} : FormProps) {
@@ -102,7 +103,7 @@ export default function Form({dispatch, state} : FormProps) {
                 id="calories" 
                 type="number" 
                 className="border border-slate-300 p-2 rounded-lg"
-                placeholder=" Calories consumed or burned example: 200, 500, etc."
+                placeholder="Calories consumed or burned example: 200, 500, etc."
                 value={activity.calories}
                 onChange={handleChange}
              />    
